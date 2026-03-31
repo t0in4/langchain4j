@@ -10,6 +10,7 @@ import chat.giga.model.Scope;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ResponseFormat;
 import dev.langchain4j.service.AiServices;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.net.URI;
 import java.net.http.HttpResponse;
@@ -17,11 +18,12 @@ import java.util.UUID;
 
 public class Main {
    public static void main(String[] args) {
-
+       Dotenv dotenv = Dotenv.load();
+       String authKey = dotenv.get("GIGACHAT_AUTH_KEY");
        AuthClient authClient = AuthClient.builder()
                .withOAuth(AuthClientBuilder.OAuthBuilder.builder()  // ← Правильный класс!
                        .scope(Scope.GIGACHAT_API_PERS)
-                       .authKey("")  // Authorization key
+                       .authKey(authKey)  // Authorization key
                        .build()).build();
        ChatModel model = GigaChatChatModel.builder()
                 .defaultChatRequestParameters(
