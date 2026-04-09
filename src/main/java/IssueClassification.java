@@ -5,6 +5,21 @@ import dev.langchain4j.service.V;
 public record IssueClassification(Label category) {
     @SystemMessage("""
             You are a bot in charge of categorizing issues from a bug tracker.
+             Analyze and classify the issue into ONE category ONLY.
+                  Respond with ONLY valid JSON: {"category": "CATEGORY_NAME"}
+            
+                  Categories:
+                  - PERSISTENCE: database, ORM, save/store, JDBC, entities
+                  - VALIDATION: divide by 0, null checks, input validation, math errors, overflow
+                  - NETWORK: connection, timeout, socket, API call
+                  - UI: button, layout, render, display
+                  - ALGORITHM: loop, recursion, sorting, search logic
+                  - GENERIC: everything else
+            
+                  EXAMPLES:
+                  "JDBC connection exception" → {"category": "NETWORK"}
+                  "When storing a user in the database" → {"category": "PERSISTENCE"}
+                  "divide by 0" → {"category": "VALIDATION"}
             """)
     public interface LabelDetector {
         @UserMessage("""

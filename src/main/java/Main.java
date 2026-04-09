@@ -5,6 +5,7 @@ import chat.giga.http.client.HttpClient;
 import chat.giga.http.client.HttpRequest;
 import chat.giga.langchain4j.GigaChatChatModel;
 import chat.giga.langchain4j.GigaChatChatRequestParameters;
+import chat.giga.model.Model;
 import chat.giga.model.ModelName;
 import chat.giga.model.Scope;
 import dev.langchain4j.model.chat.ChatModel;
@@ -29,11 +30,16 @@ public class Main {
                         .build()).build();
         ChatModel model = GigaChatChatModel.builder()
                 .authClient(authClient)
-                .responseFormat(ResponseFormat.builder()
-                        .type(ResponseFormatType.JSON)
-                        .jsonSchema(JsonSchemas.jsonSchemaFrom(IssueClassification.class).get())
+                .defaultChatRequestParameters(GigaChatChatRequestParameters.builder()
+                        .modelName(ModelName.GIGA_CHAT_2)  // Add this line
+                        .temperature(0.0)
+                        .responseFormat(ResponseFormat.builder()
+                                .type(ResponseFormatType.JSON)
+                                .jsonSchema(JsonSchemas.jsonSchemaFrom(IssueClassification.class).get())
+                                .build())
                         .build())
                 .build();
+
         IssueClassification.LabelDetector labelDetector = AiServices.builder(IssueClassification.LabelDetector.class)
                 .chatModel(model)
                 .build();
